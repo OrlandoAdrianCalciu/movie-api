@@ -23,7 +23,7 @@ http.createServer((request, response) => {
         filePath = 'index.html';
     }
 
-    fs.readFiel(filePath, (err, data) => {
+    fs.readFile(filePath, (err, data) => {
         if (err) {
             throw err;
         }
