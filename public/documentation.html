@@ -5,14 +5,129 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>Movie Database</title>
 </head>
 
 <body>
-    <h1>Objective</h1>
-    <p>The web application will provide users with acces to information about different movies, directors and genres.
-        Users will be able to sign up, update their personal information, and create a list of their favorite movies.
-    </p>
+    <header>
+        <h1>Documentation</h1>
+        <p>The web application will provide users with acces to information about different movies, directors and
+            genres.
+            Users will be able to sign up, update their personal information, and create a list of their favorite
+            movies.
+        </p>
+    </header>
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Businnes Logic</th>
+                    <th>URL</th>
+                    <th>HTTP Method</th>
+                    <th>Request body data format</th>
+                    <th>Response body data format</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Get a list of all movies</td>
+                    <td>/movies</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>A JSON object holding data about all the students</td>
+                </tr>
+                <tr>
+                    <td>Get data about a single movie</td>
+                    <td>/movies/[movieName]</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>A JSON object holding data about a single movie, containing the title, author, genre and a
+                        image. Example:
+                        <pre>
+                        <code>
+                        {
+                            title: 'The Fate of the Furious',
+                            author: {
+                                name: 'Chris Morgan',
+                                born: 'December 5, 1970'
+                            },
+                            genre: {
+                                name: 'Action',
+                                description: 'A film with a fast-moving plot, usually containing scenes of violence.'
+                            },
+                            img: '',
+                        } </code>
+                    </pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Get data about a genre</td>
+                    <td>/movies/genres/[genreName]</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>A JSON object holding data about the genre</td>
+                </tr>
+                <tr>
+                    <td>Get data about an author</td>
+                    <td>/movies/authors/[authorName]</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>A JSON object holding data about an author</td>
+                </tr>
+                <tr>
+                    <td>Create a user</td>
+                    <td>/users</td>
+                    <td>POST</td>
+                    <td>A JSON object holding data about the user to add:
+                        {
+                            name: "Max",
+                            favoriteMovies: ["The Fate of the Furious"]
+                        }
+                    </td>
+                    <td>A JSON object holding data about the user that was added:
+                        <pre>
+                        <code>
+                        {
+                            id: 1,
+                            name: "Max",
+                            favoriteMovies: ["The Fate of the Furious"]
+                        }
+                        </code>
+                    </pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Update a user</td>
+                    <td>/users/[id]</td>
+                    <td>PUT</td>
+                    <td>None</td>
+                    <td>A text message indicating the user</td>
+                </tr>
+                <tr>
+                    <td>Add a movie to their favorites</td>
+                    <td>/users/[id]/[movieName]</td>
+                    <td>POST</td>
+                    <td>None</td>
+                    <td>A text message indicating that the movie has been added to favorites</td>
+                </tr>
+                <tr>
+                    <td>Delete a movie from their favorites</td>
+                    <td>/users/[id]/[movieName]</td>
+                    <td>DELETE</td>
+                    <td>None</td>
+                    <td>A text message indicating that the movie has been removed</td>
+                </tr>
+                <tr>
+                    <td>Delete the existing user</td>
+                    <td>/users/[id]</td>
+                    <td>DELETE</td>
+                    <td>None</td>
+                    <td>A text message indicating that the user was deleted</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
 
 </body>
 

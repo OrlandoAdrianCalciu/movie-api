@@ -1,0 +1,27 @@
+body {
+    background-color: #00203FFF;
+    color: white;
+    text-align: center;
+}
+
+h1 {
+    color: #0096c7;
+}
+
+table,
+td {
+    border: 1px solid white;
+    vertical-align: top;
+}
+
+tr:nth-child(even) {
+    background-color: #0096c7;
+}
+
+thead {
+    background-color: #0096c7;
+}
+
+pre {
+    text-align: left;
+}
