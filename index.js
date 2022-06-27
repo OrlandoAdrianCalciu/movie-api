@@ -37,7 +37,7 @@ let users = [
 let topMovies = [
     {
         title: 'The Fate of the Furious',
-        author: {
+        director: {
             name: 'Chris Morgan',
             born: 'December 5, 1970'
         },
@@ -50,7 +50,7 @@ let topMovies = [
     {
         title: 'John Wick',
         chapter: '2',
-        author: {
+        director: {
             name: 'Chad Stahleski',
             born: 'April 4, 1974'
         },
@@ -63,7 +63,7 @@ let topMovies = [
     },
     {
         title: 'Ghost in the Shell',
-        author: {
+        director: {
             name: 'Masamune Shirow',
             born: 'November 23, 1961'
         },
@@ -76,7 +76,7 @@ let topMovies = [
     },
     {
         title: 'Life',
-        author: {
+        director: {
             name: 'Rhett Reese',
             born: 'October 10, 1975'
         },
@@ -89,7 +89,7 @@ let topMovies = [
     },
     {
         title: 'Gifted',
-        author: {
+        director: {
             name: 'Tom Flynn',
             born: 'August 18, 1955',
             died: 'August 23, 2021'
@@ -103,7 +103,7 @@ let topMovies = [
     },
     {
         title: 'The Mummy',
-        author: {
+        director: {
             name: 'Chris Morgan',
             born: 'December 5, 1970'
         },
@@ -116,7 +116,7 @@ let topMovies = [
     },
     {
         title: 'Pirates of the Caribbean: Dead Men Tell No Tales',
-        author: {
+        director: {
             name: 'Jeff Nathanson',
             born: 'October 12, 1965'
         },
@@ -142,7 +142,7 @@ let topMovies = [
     },
     {
         title: '47 Meters Down',
-        author: {
+        director: {
             name: 'Johannes Roberts',
             born: 'May 24, 1976'
         },
@@ -155,7 +155,7 @@ let topMovies = [
     },
     {
         title: 'A Ghost Story',
-        author: {
+        director: {
             name: 'David Lowery',
             born: 'December 26, 1980'
         },
@@ -208,15 +208,14 @@ app.get('/movies/genres/:genreName', (req, res) => {
 });
 
 //Gets the data about a single author, by name
-app.get('/movies/authors/:authorName', (req, res) => {
-    const { authorName } = req.params;
-    const author = topMovies.find(movie => movie.author.name === authorName).author;
+app.get('/movies/director/:directorName', (req, res) => {
+    const { directorName } = req.params;
+    const director = topMovies.find(movie => movie.director.name === directorName).director;
 
-    if (author) {
-        res.status(200).json(author);
+    if (director) {
+        res.status(200).json(director);
     } else {
-        res.status(400).send('This author does not exist.')
-    }
+        res.status(400).send('This author does not existdirector
 });
 
 //Get all users
@@ -351,19 +350,38 @@ app.post('/users/:Username/movies/:MovieID', (req, res) =>{
     });
 });
 
-//Delete a movie from favorites
-app.delete('/users/:id/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params;
+//Delete a movie from favorites without database
+// app.delete('/users/:id/:movieTitle', (req, res) => {
+//     const { id, movieTitle } = req.params;
 
-    //Checks if user exists
-    let user = users.find(user => user.id == id);
+//     //Checks if user exists
+//     let user = users.find(user => user.id == id);
 
-    if (user) {
-        user.favoriteMovies = user.favoriteMovies.filter(title => title !== movieTitle);
-        res.status(200).send(`${movieTitle} has been removed from users ${id}'s favorites`);
-    } else {
-        res.status(400).send('The movie was not removed.');
-    }
+//     if (user) {
+//         user.favoriteMovies = user.favoriteMovies.filter(title => title !== movieTitle);
+//         res.status(200).send(`${movieTitle} has been removed from users ${id}'s favorites`);
+//     } else {
+//         res.status(400).send('The movie was not removed.');
+//     }
+// });
+
+//Delete a movie from favorites with database
+app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+    Users.findOneAndUpdate(
+        {Username: req.params.Username},
+        {
+            $pull: {FavoriteMovies: req.params.MovieID},
+        },
+        {new: true},
+        (err, updatedUser) => {
+            if(err){
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else{
+                res.json(updatedUser);
+            }
+        }
+    );
 });
 
 //Delete the user without a database
