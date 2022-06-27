@@ -39,7 +39,7 @@
                 </tr>
                 <tr>
                     <td>Get data about a single movie</td>
-                    <td>/movies/[movieName]</td>
+                    <td>/movies/:Title</td>
                     <td>GET</td>
                     <td>None</td>
                     <td>A JSON object holding data about a single movie, containing the title, author, genre and a
@@ -63,14 +63,14 @@
                 </tr>
                 <tr>
                     <td>Get data about a genre</td>
-                    <td>/movies/genres/[genreName]</td>
+                    <td>/movies/genres/:Name</td>
                     <td>GET</td>
                     <td>None</td>
                     <td>A JSON object holding data about the genre</td>
                 </tr>
                 <tr>
                     <td>Get data about an author</td>
-                    <td>/movies/authors/[authorName]</td>
+                    <td>/movies/director/:Name</td>
                     <td>GET</td>
                     <td>None</td>
                     <td>A JSON object holding data about an author</td>
@@ -99,28 +99,28 @@
                 </tr>
                 <tr>
                     <td>Update a user</td>
-                    <td>/users/[id]</td>
+                    <td>/users/:Username</td>
                     <td>PUT</td>
                     <td>None</td>
                     <td>A text message indicating the user</td>
                 </tr>
                 <tr>
                     <td>Add a movie to their favorites</td>
-                    <td>/users/[id]/[movieName]</td>
+                    <td>/users/:Username/movies/:MovieID</td>
                     <td>POST</td>
                     <td>None</td>
                     <td>A text message indicating that the movie has been added to favorites</td>
                 </tr>
                 <tr>
                     <td>Delete a movie from their favorites</td>
-                    <td>/users/[id]/[movieName]</td>
+                    <td>/users/:Username/movies/:MovieID</td>
                     <td>DELETE</td>
                     <td>None</td>
                     <td>A text message indicating that the movie has been removed</td>
                 </tr>
                 <tr>
                     <td>Delete the existing user</td>
-                    <td>/users/[id]</td>
+                    <td>/users/:Username</td>
                     <td>DELETE</td>
                     <td>None</td>
                     <td>A text message indicating that the user was deleted</td>
