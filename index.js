@@ -3,7 +3,7 @@ const express = require("express"),
     path = require('path'),
     bodyParser = require('body-parser'),
     fs = require('fs')
-    uuid = require('uuid');
+uuid = require('uuid');
 
 
 const mongoose = require('mongoose');
@@ -24,7 +24,13 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use(bodyParser.urlencoded({ extended: true }));
 
+
+let auth = require('./auth')(app);
+
+const passport = require('passport');
+require('./passport');
 
 app.use(morgan('common'));
 
@@ -42,16 +48,16 @@ app.get('/documentation', (req, res) => {
 
 
 //Gets the list of data about all movies with database
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
-        .then((movies) => {
-            res.status(201).json(movies);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('Error: ' + err)
-        })
-})
+      .then((movies) => {
+        res.status(201).json(movies);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+      });
+  });
 
 
 
@@ -126,7 +132,7 @@ app.post('/users', (req, res) => {
     Users.findOne({ Username: req.body.Username })
         .then((user) => {
             if (user) {
-                return res.status(400).send(req.body.Username + 'already exists');
+                return res.status(400).send(req.body.Username + ' already exists');
             } else {
                 Users
                     .create({
