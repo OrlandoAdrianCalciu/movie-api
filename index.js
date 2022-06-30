@@ -26,11 +26,28 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const cors = require('cors');
+app.use(cors());
+
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if(!origin) return callback(null, true);
+        if(allowedOrigins.indexOf(origin) === -1){ //If a specific origin isn't found on the list of allowed origins
+            let message = "The CORS policy for this application doesn't allow acces from origin" + origin;
+            return callback(new Error(message ), false);
+        }
+        return callback(null, true);
+    }
+}));              
 
 let auth = require('./auth')(app);
 
 const passport = require('passport');
 require('./passport');
+
+const {check, validationResult} = require('express-validator');
 
 app.use(morgan('common'));
 
@@ -128,16 +145,28 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }) , (
 
 
 //Create user with database
-app.post('/users', (req, res) => {
-    Users.findOne({ Username: req.body.Username })
+app.post('/users',
+    [check('Username', 'Username is required').isLength({min: 5}),
+check('Username', 'Username contains non alphanumeric characters - not allowed').isAlphanumeric(),
+check('Password', 'Password is required').not().isEmpty(),
+check('Email', 'Email does not appear to be valid').isEmail()
+], (req, res) => {
+    let error = validationResult(req);
+
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors: errors.array()});
+    }
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    Users.findOne({ Username: req.body.Username }) //Search to see if user with the requested username already exists
         .then((user) => {
             if (user) {
+                // If the user is found, send a response that it already exists
                 return res.status(400).send(req.body.Username + ' already exists');
             } else {
                 Users
                     .create({
                         Username: req.body.Username,
-                        Password: req.body.Password,
+                        Password: hashedPassword,
                         Email: req.body.Email,
                         Birthday: req.body.Birthday
                     })
@@ -238,6 +267,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-app.listen(8080, () => {
-    console.log('Your app is listening on port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+    console.log('Listening on Port ' + port);
 });
