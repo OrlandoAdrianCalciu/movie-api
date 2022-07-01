@@ -16,7 +16,7 @@ const Users = Models.User;
 //     useNewUrlParser: true, useUnifiedTopology: true
 // });
 
-mongoose.connect('mongodb+srv://myFlixDBadmin:1brM4FT3RLVyRkbd@myflixdb.oaalxkv.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect(process.env.CONNECTION_URI, {
     useNewUrlParser: true, useUnifiedTopology: true
 });
 
