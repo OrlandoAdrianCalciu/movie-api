@@ -186,25 +186,34 @@ app.post('/users', [
 });
 
 //Update a user's info, by username with database
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.put('/users/:Username', [
+    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+], passport.authenticate('jwt', { session: false }), (req, res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $set:
         {
             Username: req.body.Username,
-            Password: req.body.Password,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
         }
     },
         { new: true }, //This line makes sure that the updated document is returned
-        (err, updatedUser) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send('Error: ' + err);
-            } else {
-                res.json(updatedUser);
-            }
-        });
+    )
+        .then(updatedUser => {
+            res.status(201).json(updatedUser)
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).send('Error :' + error)
+        })
 });
 
 
