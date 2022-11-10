@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const cors = require('cors');
 app.use(cors());
 
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234', 'https://myflix-client-react-orlando.netlify.app/'];
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234', 'https://myflix-client-react-orlando.netlify.app/', 'http://localhost:4200'];
 
 app.use(cors({
     origin: (origin, callback) => {
