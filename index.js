@@ -257,6 +257,21 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
     );
 });
 
+app.get('/users/:Username/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Users.findOne({ Username: req.params.Username })
+        .then((user) => {
+            if (user) {
+                res.status(200).json(user.favMovies);
+            } else {
+                res.status(400).send('Could not find favorite movies for this user');
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
 
 
 //Delete the user with database
